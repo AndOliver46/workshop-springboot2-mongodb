@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.andoliver46.workshopmongo.domain.User;
 import com.andoliver46.workshopmongo.domain.services.UserService;
 import com.andoliver46.workshopmongo.dto.UserDTO;
+import com.andoliver46.workshopmongo.resources.exceptions.StandardError;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -36,12 +37,19 @@ public class UserResource {
 		User user = userService.findById(id);
 		return ResponseEntity.ok().body(new UserDTO(user));
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto){
+	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {
 		User user = userService.fromDTO(objDto);
 		user = userService.insert(user);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String id){
+		userService.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 }
