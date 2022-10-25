@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.andoliver46.workshopmongo.domain.Post;
 import com.andoliver46.workshopmongo.domain.User;
 import com.andoliver46.workshopmongo.domain.services.UserService;
 import com.andoliver46.workshopmongo.dto.UserDTO;
-import com.andoliver46.workshopmongo.resources.exceptions.StandardError;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -47,11 +47,11 @@ public class UserResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable String id){
+	public ResponseEntity<Void> delete(@PathVariable String id) {
 		userService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
 		User user = userService.fromDTO(objDto);
@@ -60,4 +60,9 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@RequestMapping(value = "/{id}/posts", method = RequestMethod.GET)
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id) {
+		User user = userService.findById(id);
+		return ResponseEntity.ok().body(user.getPost());
+	}
 }
