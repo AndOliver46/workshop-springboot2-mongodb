@@ -30,13 +30,25 @@ public class UserService {
 	public User insert(User obj) {
 		return userRepository.insert(obj);
 	}
-
-	public User fromDTO(UserDTO objDto) {
-		return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
-	}
-
+	
 	public void deleteById(String id) {
 		findById(id);
 		userRepository.deleteById(id);
+	}
+	
+	public User update(User obj) {
+		User newObj = findById(obj.getId());
+		updateData(newObj, obj);
+		return userRepository.save(newObj);
+	}
+
+	private void updateData(User newObj, User obj) {
+		newObj.setId(obj.getId());
+		newObj.setName(obj.getName());
+		newObj.setEmail(obj.getEmail());
+	}
+
+	public User fromDTO(UserDTO objDto) {
+		return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
 	}
 }
